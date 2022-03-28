@@ -1,0 +1,17 @@
+Initialize project
+- npm install -g @vue/cli
+- vue create .
+- yarn add bootstrap
+- npm i -g @vue/cli-service-global
+- yarn add axios
+- npm i bootstrap-vue
+- yarn add @fortawesome/fontawesome-svg-core@next (optional)
+- yarn add @fortawesome/free-solid-svg-icons@next (optional)
+- yarn add @fortawesome/free-regular-svg-icons@next (optional)
+- yarn add @fortawesome/vue-fontawesome@latest (optional)
+- yarn add qs (optional)
+- yarn add vue-router@3.5.3
+- yarn add vuex@3.6.2
+
+Reminder
+ - always add node_modules inside your .gitignore file
