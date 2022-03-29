@@ -1,10 +1,10 @@
-import Vue from "vue";
-import Vuex from "vuex";
+// import Vue from 'vue';
+import { createStore } from 'vuex';
 
 // use vuex
-Vue.useAttrs(Vuex);
+// Vue.use(Vuex);
 
-const store = new Vuex.Store({
+const store = createStore({
     state: {
         users: [
             {

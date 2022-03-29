@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="d-flex flex-column">
+  <div id="main-div">
+    <div id="background" class="d-flex flex-column">
       <!-- navbar start -->
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -31,4 +31,17 @@ export default {
 </script>
 
 <style>
+#main-div {
+  height: 100vh;
+  background-image: url("@/images/background.jpg");
+  background-size: cover;
+}
+#background {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .nav-link.active {
+    font-weight: bold;
+}
 </style>
