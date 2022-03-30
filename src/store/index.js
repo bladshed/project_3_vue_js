@@ -13,10 +13,13 @@ const store = createStore({
             }
         ]
     },
-    getter: {
+    getters: {
         // getters allow access to the data (BUT you are not allowed to change data)
         customers: function (state) {
             return state.users;
+        },
+        getAccessToken: function () {
+            return localStorage.getItem("access_token");
         }
     }
 })

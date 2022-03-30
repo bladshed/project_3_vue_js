@@ -99,9 +99,15 @@ const BASE_API_URL = "http://localhost:8080/";
 export default {
   name: "SM-Sneakers",
   created: async function () {
+    if(!this.$store.getters.getAccessToken){
+      this.$router.push("/user/login");
+      return;
+    }
+
     // initialize data
     let sneakersData;
     let output = 0;
+    let count = 0;
 
     do {
       await axios
@@ -130,7 +136,9 @@ export default {
             sneakersData = response.data.sneakers;
           }, 2000);
         });
-    } while (output != 1);
+
+        count++;
+    } while (output != 1 && count < 5);
     this.sneakers = sneakersData;
     console.log(this.sneakers);
   },

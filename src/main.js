@@ -5,7 +5,8 @@ import store from "@/store";
 import { createRouter, createWebHistory } from "vue-router";
 
 // pages
-import UserAdd from "@/views/User-Register";
+import UserLogin from "@/views/User-Login.vue";
+import UserRegister from "@/views/User-Register";
 import SMHome from "@/views/SM-Home";
 import SMSneakers from "@/views/SM-Sneakers";
 import SneakerCard from "@/components/SneakerCard.vue";
@@ -14,9 +15,14 @@ import SneakerCard from "@/components/SneakerCard.vue";
 const routes = [
     // routes go here
     {
-        path: "/add",
-        name: "add",
-        component: UserAdd
+        path: "/user/login",
+        name: "login",
+        component: UserLogin
+    },
+    {
+        path: "/user/register",
+        name: "register",
+        component: UserRegister
     },
     {
         path: "/",
@@ -39,7 +45,6 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
-    routes,
-    store
+    routes
 })
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(store).mount('#app')

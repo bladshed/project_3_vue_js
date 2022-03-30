@@ -1,6 +1,7 @@
 Initialize project
 - npm install -g @vue/cli
 - vue create .
+- yarn add dotenv
 - yarn add bootstrap
 - npm i -g @vue/cli-service-global
 - yarn add axios
