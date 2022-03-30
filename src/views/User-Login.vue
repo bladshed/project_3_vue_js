@@ -42,15 +42,21 @@ export default {
   },
   methods:{
     signIn: async function() {
+      let router = this.$router; 
       await axios.post(process.env.VUE_APP_BASE_API_URL + "api/users/login", {
           email: this.email,
           password: this.password
       })
       .then(function (response) {
-        console.log("SUCCESS");
+        // set tokens
         localStorage.setItem("refresh_token", response.data.refreshToken);
         localStorage.setItem("access_token", response.data.accessToken);
-        this.$router.push("/");
+
+        // display navbar
+        document.getElementById("navbar").style.display = "block";
+
+        // navigate to home page
+        router.push("/");
       })
       .catch(function (error) {
         console.log("ERROR: " + error);
@@ -61,15 +67,7 @@ export default {
         }
       });
 
-
-      // let response = await axios.post(process.env.VUE_APP_BASE_API_URL + "api/users/login", {
-      //     email: this.email,
-      //     password: this.password
-      // });
-
-      // // save the refresh token and the access token in the localstorage
-      // localStorage.setItem("refresh_token", response.data.refreshToken);
-      // localStorage.setItem("access_token", response.data.accessToken);
+      return;
     }
   }
 };

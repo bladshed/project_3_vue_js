@@ -11,7 +11,7 @@ export default {
   name: "SM-Home",
   created: async function () {
     console.log("Store: " + this.$store.getters.getAccessToken);
-    if(!this.$store.getters.getAccessToken){
+    if(!this.$store.getters.getAccessToken || this.$store.getters.getAccessToken === ""){
       this.$router.push("/user/login");
       return;
     }

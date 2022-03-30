@@ -99,7 +99,7 @@ const BASE_API_URL = "http://localhost:8080/";
 export default {
   name: "SM-Sneakers",
   created: async function () {
-    if(!this.$store.getters.getAccessToken){
+    if(!this.$store.getters.getAccessToken || this.$store.getters.getAccessToken === ""){
       this.$router.push("/user/login");
       return;
     }
@@ -114,8 +114,7 @@ export default {
         .get(BASE_API_URL + "api/sneakers", {
           headers: {
             Authorization:
-              "Bearer " +
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdF9uYW1lIjoiRnJhbmNpcyBNYXJrIiwibGFzdF9uYW1lIjoiU2VycmFubyIsImlkIjozLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY0ODU3Mzc0MCwiZXhwIjoxNjQ4NTc0NjQwfQ.xxv5as9R3A9Ne8WovtjBVxFbDS20xRsrckdRgiD0CD4",
+              "Bearer " + localStorage.getItem("access_token"),
           },
         })
         .then(function (response) {
