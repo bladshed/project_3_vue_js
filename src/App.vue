@@ -11,6 +11,7 @@
             <div class="navbar-nav">
               <router-link to="/" class="nav-link active" aria-current="page" id="home" href="#">Home</router-link>
               <router-link to="/sneakers" class="nav-link" id="sneakers" href="#">Sneakers</router-link>
+              <router-link to="/cart" class="nav-link" id="cart" href="#">Cart</router-link>
               <router-link to="/user/login" class="nav-link" id="logout" href="#" v-on:click="logout">Logout</router-link>
               <!-- <a v-on:click="logout" class="nav-link" id="outfits" href="#">Logout</a> -->
             </div>

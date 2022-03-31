@@ -11,6 +11,7 @@ import SMHome from "@/views/SM-Home";
 import SMSneakers from "@/views/SM-Sneakers";
 import SneakerCard from "@/components/SneakerCard.vue";
 import SMCart from "@/views/SM-Cart.vue";
+import CartItemCard from "@/components/CartItemCard.vue";
 
 // create a router object
 const routes = [
@@ -43,9 +44,16 @@ const routes = [
         ]
     },
     {
-        path: "/cart/:userId",
+        path: "/cart",
         name: "cart",
-        component: SMCart
+        component: SMCart,
+        children: [
+            {
+                path: ':id',
+                name: 'cartItemCard',
+                component: CartItemCard,
+            }
+        ]
     }
 ];
 
