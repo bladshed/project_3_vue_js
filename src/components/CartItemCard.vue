@@ -1,7 +1,7 @@
 <template>
   <div class="card col-2 m-2">
     <div class="card-header d-flex justify-content-between">
-        <strong>{{ sneaker.brand.name.toUpperCase() }}</strong>
+        <strong>{{ cartItem.sneaker.brand.name.toUpperCase() }}</strong>
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ sneaker.name }}</h5>
@@ -18,8 +18,8 @@
 
 <script>
 export default {
-  name: "SneakerCard",
-  props: ["sneaker"],
+  name: "CartItemCard",
+  props: ["cartItem"],
   data: function () {
     return {
       formattedDate: "",

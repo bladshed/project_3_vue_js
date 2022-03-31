@@ -10,6 +10,7 @@ import UserRegister from "@/views/User-Register";
 import SMHome from "@/views/SM-Home";
 import SMSneakers from "@/views/SM-Sneakers";
 import SneakerCard from "@/components/SneakerCard.vue";
+import SMCart from "@/views/SM-Cart.vue";
 
 // create a router object
 const routes = [
@@ -31,15 +32,20 @@ const routes = [
     },
     {
         path: "/sneakers",
-        name: "edit",
+        name: "sneakers",
         component: SMSneakers,
         children: [
             {
                 path: ':id',
-                name: 'SneakerCard',
+                name: 'sneakerCard',
                 component: SneakerCard,
             }
         ]
+    },
+    {
+        path: "/cart/:userId",
+        name: "cart",
+        component: SMCart
     }
 ];
 

@@ -47,13 +47,12 @@ export default {
           refreshToken: localStorage.getItem("refresh_token"),
       })
       .then(function () {
-        console.log("SUCCESS logout");
-
+        // remove token values
+        localStorage.setItem("user_id", "");
         localStorage.setItem("access_token", "");
         localStorage.setItem("refresh_token", "");
         document.getElementById("navbar").style.display = "none";
 
-        // router.push("/user/login");
       })
       .catch(function (error) {
         console.log("ERROR: " + error);

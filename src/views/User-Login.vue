@@ -1,9 +1,8 @@
 <template>
   <div
-    id="login-div"
-    class="col-12 d-flex flex-column align-items-center justify-content-center"
+    class="col-12 d-flex flex-column align-items-center justify-content-center login-div"
   >
-    <div id="login-form" class="col-4 d-flex flex-column align-items-center justify-content-center">
+    <div class="col-4 d-flex flex-column align-items-center justify-content-center login-form">
       <!-- Email input -->
       <div class="form-outline mb-4 mt-3 col-8">
         <input type="email" id="email" class="form-control" v-model="email" />
@@ -18,12 +17,12 @@
 
       <!-- Submit button -->
       <button type="button" class="btn btn-primary btn-block mb-4" v-on:click="signIn">
-        Sign in
+        Sign In
       </button>
 
       <!-- Register buttons -->
       <div class="text-center">
-        <p>Not a member? <a href="#!">Register</a></p>
+        <p>Not a member? <router-link to="/user/register" >Register</router-link> </p>
       </div>
     </div>
   </div>
@@ -49,6 +48,7 @@ export default {
       })
       .then(function (response) {
         // set tokens
+        localStorage.setItem("user_id", response.data.userId);
         localStorage.setItem("refresh_token", response.data.refreshToken);
         localStorage.setItem("access_token", response.data.accessToken);
 
@@ -74,10 +74,11 @@ export default {
 </script>
 
 <style>
-#login-div {
+.login-div {
   height: 80vh;
+  overflow-y: auto;
 }
-#login-form {
+.login-form {
   background-color: rgb(197, 192, 192);
 }
 </style>

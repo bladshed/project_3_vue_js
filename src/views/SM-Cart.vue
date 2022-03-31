@@ -1,71 +1,10 @@
 <template>
   <div id="content-div" class="d-flex" v-bind:style="{ height: '100vh' }">
     <main class="d-flex py-3 w-100">
-      <!-- search column start -->
-      <div
-        class="col-2 p-3 justify-content-center align-items-center"
-        id="search-div"
-      >
-        <input
-          id="search-input"
-          class="form-control"
-          type="text"
-          placeholder="search input"
-          v-model="searchInput"
-        />
-        <hr />
-        <label>Types</label>
-        <select
-          class="form-select"
-          multiple
-          aria-label="Types"
-          v-model="searchType"
-        >
-          <option value="">all</option>
-          <option>formal</option>
-          <option>casual</option>
-          <option>streetwear</option>
-        </select>
-
-        <hr />
-        <label>Genders</label>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="search-male"
-            name="search-male"
-            value="male"
-            v-model="searchGender"
-          />
-          <label class="form-check-label" for="search-male"> Male </label>
-        </div>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="search-female"
-            name="search-female"
-            value="female"
-            v-model="searchGender"
-          />
-          <label class="form-check-label" for="search-female"> Female </label>
-        </div>
-        <div class="text-center">
-          <button
-            class="btn-sm btn-success m-1 col-10"
-            id="search-btn"
-            v-on:click="searchQuery"
-          >
-            SEARCH
-          </button>
-        </div>
-      </div>
-      <!-- search column end -->
 
       <!-- sneaker records start -->
       <div
-        id="records-div"
+        id="cart-div"
         class="
           col-10
           d-flex
@@ -74,10 +13,10 @@
           flex-wrap
         "
       >
-        <SneakerCard
-          v-for="sneaker in sneakers"
-          v-bind:key="sneaker.id"
-          v-bind:sneaker="sneaker"
+        <CartItems
+          v-for="cartItem in cartItems"
+          v-bind:key="cartItem.id"
+          v-bind:cartItem="cartItem"
           v-on:add-to-cart="addToCart"
         />
 
@@ -88,10 +27,9 @@
 </template>
 
 <script>
-import SneakerCard from "@/components/SneakerCard.vue";
+import CartItemCard from "@/components/CartItemCard.vue";
 import axios from "axios";
 import qs from "qs";
-
 export default {
   name: "SM-Sneakers",
   created: async function () {
@@ -101,13 +39,13 @@ export default {
     }
 
     // initialize data
-    let sneakersData;
+    let cartItemsData;
     let output = 0;
     let count = 0;
 
     do {
       await axios
-        .get(`${process.env.VUE_APP_BASE_API_URL}api/sneakers`, {
+        .get(`${process.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem("user_id")}`, {
           headers: {
             Authorization:
               "Bearer " + localStorage.getItem("access_token"),
@@ -115,20 +53,20 @@ export default {
         })
         .then(function (response) {
           console.log("SUCCESS");
-          sneakersData = response.data.sneakers;
+          cartItemsData = response.data.cartItems;
           output = 1;
         })
         .catch(function (error) {
           console.log("ERROR: " + error);
           output = 0;
           if (error.response) {
-            console.log(error.response.data.sneakers);
+            console.log(error.response.data.cartItems);
             console.log(error.response.status);
             console.log(error.response.headers);
           }
           setTimeout(async function () {
-            let response = await axios.get(`${process.env.VUE_APP_BASE_API_URL}api/sneakers`);
-            sneakersData = response.data.sneakers;
+            let response = await axios.get(`${process.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem("user_id")}`);
+            cartItemsData = response.data.cartItems;
           }, 2000);
         });
 
@@ -142,25 +80,27 @@ export default {
       localStorage.setItem("access_token", "");
       localStorage.setItem("refresh_token", "");
       document.getElementById("navbar").style.display = "none";
-
+      
       this.$router.push("/user/login");
       return;
     }
 
-    this.sneakers = sneakersData;
+    this.cartItems = cartItemsData;
   },
   components: {
-    SneakerCard
+    CartItemCard
   },
   data: function () {
     return {
-      sneakers: [],
-      searchInput: "",
-      searchType: [],
-      searchGender: [],
+      cartItems: []
     };
   },
   methods: {
+    refreshData: async function () {
+      // call get all outfits api
+      let response = await axios.get(BASE_API_URL + "outfits");
+      this.sneakers = response.data.sneakers;
+    },
     addToCart: async function (sneakerId) {
         // call add new api
         await axios.post(`${process.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem("user_id")}/add`,{
@@ -188,7 +128,7 @@ export default {
         this.searchType = [];
       }
       // call search api
-      let results = await axios.get(`${process.env.VUE_APP_BASE_API_URL}api/sneakers`, {
+      let results = await axios.get(BASE_API_URL + "outfit-search", {
         params: {
           description: this.searchInput,
           types: this.searchType,
@@ -219,7 +159,7 @@ export default {
   background-color: #0d6efd;
   border-color: #0d6efd;
 }
-#records-div {
+#cart-div {
   height: 80vh;
   overflow-y: auto;
 }
