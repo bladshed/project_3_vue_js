@@ -48,6 +48,7 @@ export default {
   name: "User-Register",
   data: function () {
     return {
+      env: this.$store.getters.variables,
       first_name: "",
       last_name: "",
       email: "",
@@ -56,7 +57,7 @@ export default {
   },
   methods:{
     register: async function() {
-      await axios.post(process.env.VUE_APP_BASE_API_URL + "api/users/register", {
+      await axios.post(this.env.VUE_APP_BASE_API_URL + "api/users/register", {
           first_name: this.first_name,
           last_name: this.last_name,
           email: this.email,

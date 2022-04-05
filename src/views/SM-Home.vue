@@ -1,5 +1,5 @@
 <template>
-  <div id="content-div" class="d-flex justify-content-center align-items-center">
+  <div class="d-flex justify-content-center align-items-center content-div">
     <div class="text-center title d-flex justify-content-center align-items-center">
       <h1>WELCOME TO SNEAKER MARKET</h1>
     </div>
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style>
-#content-div{
+.content-div{
   height: 90vh;
 }
 .title {

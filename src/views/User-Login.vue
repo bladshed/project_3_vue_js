@@ -32,9 +32,10 @@
 import axios from "axios";
 
 export default {
-  name: "User-Register",
+  name: "User-Login",
   data: function () {
     return {
+      env: this.$store.getters.variables,
       email: "",
       password: "",
     };
@@ -42,7 +43,7 @@ export default {
   methods:{
     signIn: async function() {
       let router = this.$router; 
-      await axios.post(process.env.VUE_APP_BASE_API_URL + "api/users/login", {
+      await axios.post(this.env.VUE_APP_BASE_API_URL + "api/users/login", {
           email: this.email,
           password: this.password
       })

@@ -2,7 +2,7 @@
   <div id="content-div" class="d-flex" v-bind:style="{ height: '100vh' }">
     <main class="d-flex py-3 w-100">
       <!-- search column start -->
-      <div
+      <!-- <div
         class="col-2 p-3 justify-content-center align-items-center"
         id="search-div"
       >
@@ -60,7 +60,7 @@
             SEARCH
           </button>
         </div>
-      </div>
+      </div> -->
       <!-- search column end -->
 
       <!-- sneaker records start -->
@@ -90,7 +90,7 @@
 <script>
 import SneakerCard from "@/components/SneakerCard.vue";
 import axios from "axios";
-import qs from "qs";
+// import qs from "qs";
 
 export default {
   name: "SM-Sneakers",
@@ -107,7 +107,7 @@ export default {
 
     do {
       await axios
-        .get(`${process.env.VUE_APP_BASE_API_URL}api/sneakers`, {
+        .get(`${this.env.VUE_APP_BASE_API_URL}api/sneakers`, {
           headers: {
             Authorization:
               "Bearer " + localStorage.getItem("access_token"),
@@ -127,7 +127,7 @@ export default {
             console.log(error.response.headers);
           }
           setTimeout(async function () {
-            let response = await axios.get(`${process.env.VUE_APP_BASE_API_URL}api/sneakers`);
+            let response = await axios.get(`${this.env.VUE_APP_BASE_API_URL}api/sneakers`);
             sneakersData = response.data.sneakers;
           }, 2000);
         });
@@ -154,6 +154,7 @@ export default {
   },
   data: function () {
     return {
+      env: this.$store.getters.variables,
       sneakers: [],
       searchInput: "",
       searchType: [],
@@ -163,7 +164,7 @@ export default {
   methods: {
     addToCart: async function (sneakerId) {
         // call add new api
-        await axios.post(`${process.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem("user_id")}/add`,{
+        await axios.post(`${this.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem("user_id")}/add`,{
           sneaker_id: sneakerId
         },{
           headers: {
@@ -183,24 +184,24 @@ export default {
           }
         });
     },
-    searchQuery: async function () {
-      if (this.searchType.length == 1 && this.searchType[0].trim() === "") {
-        this.searchType = [];
-      }
-      // call search api
-      let results = await axios.get(`${process.env.VUE_APP_BASE_API_URL}api/sneakers`, {
-        params: {
-          description: this.searchInput,
-          types: this.searchType,
-          genders: this.searchGender,
-        },
-        paramsSerializer: (params) => {
-          return qs.stringify(params);
-        },
-      });
-      // set query list
-      this.sneakers = results.data;
-    },
+    // searchQuery: async function () {
+    //   if (this.searchType.length == 1 && this.searchType[0].trim() === "") {
+    //     this.searchType = [];
+    //   }
+    //   // call search api
+    //   let results = await axios.get(`${this.env.VUE_APP_BASE_API_URL}api/sneakers`, {
+    //     params: {
+    //       description: this.searchInput,
+    //       types: this.searchType,
+    //       genders: this.searchGender,
+    //     },
+    //     paramsSerializer: (params) => {
+    //       return qs.stringify(params);
+    //     },
+    //   });
+    //   // set query list
+    //   this.sneakers = results.data;
+    // },
   },
 };
 </script>

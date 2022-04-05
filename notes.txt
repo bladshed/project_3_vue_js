@@ -13,6 +13,11 @@ Initialize project
 - yarn add qs (optional)
 - yarn add vue-router@3.5.3
 - yarn add vuex@3.6.2
+- yarn add @vue-stripe/vue-stripe
+
+- yarn add stripe
+- yarn add crypto-browserify
+  - "crypto-browserify": require.resolve('crypto-browserify')
 
 Reminder
  - always add node_modules inside your .gitignore file

@@ -6,59 +6,66 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // pages
 import UserLogin from "@/views/User-Login.vue";
-import UserRegister from "@/views/User-Register";
-import SMHome from "@/views/SM-Home";
-import SMSneakers from "@/views/SM-Sneakers";
+import UserRegister from "@/views/User-Register.vue";
+import SMHome from "@/views/SM-Home.vue";
+import SMSneakers from "@/views/SM-Sneakers.vue";
 import SneakerCard from "@/components/SneakerCard.vue";
 import SMCart from "@/views/SM-Cart.vue";
 import CartItemCard from "@/components/CartItemCard.vue";
+import SMSuccessPayment from "@/views/SM-Success-Payment.vue";
 
 // create a router object
 const routes = [
     // routes go here
     {
         path: "/user/login",
-        name: "login",
+        name: "User-Login",
         component: UserLogin
     },
     {
         path: "/user/register",
-        name: "register",
+        name: "User-Register",
         component: UserRegister
     },
     {
-        path: "/",
-        name: "home",
-        component: SMHome
-    },
-    {
         path: "/sneakers",
-        name: "sneakers",
+        name: "SM-Sneakers",
         component: SMSneakers,
         children: [
             {
                 path: ':id',
-                name: 'sneakerCard',
+                name: 'SneakerCard',
                 component: SneakerCard,
             }
         ]
     },
     {
         path: "/cart",
-        name: "cart",
+        name: "SM-Cart",
         component: SMCart,
         children: [
             {
                 path: ':id',
-                name: 'cartItemCard',
+                name: 'CartItemCard',
                 component: CartItemCard,
             }
         ]
-    }
+    },
+    {
+        path: "/checkout/success",
+        name: "SM-Success-Payment",
+        component: SMSuccessPayment
+    },
+    {
+        path: "/",
+        name: "SM-Home",
+        component: SMHome
+    },
 ];
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
-    routes
+    history: createWebHistory(),
+    routes,
+    linkActiveClass: 'vue-router-active-link'
 })
 createApp(App).use(router).use(store).mount('#app')

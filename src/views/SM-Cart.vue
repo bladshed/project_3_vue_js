@@ -2,7 +2,22 @@
   <div id="content-div" class="d-flex" v-bind:style="{ height: '100vh' }">
     <main class="d-flex flex-column py-3 w-100">
       <div class="text-center col-12">
-        <button class="btn-sm btn-primary m-1 col-2">CHECK OUT</button>
+        <!-- <button class="btn-sm btn-primary m-1 col-2" v-on:click="checkout">
+          CHECK OUT
+        </button> -->
+
+        <div>
+          <stripe-checkout
+            ref="checkoutRef"
+            mode="payment"
+            :pk="publishableKey"
+            :line-items="lineItems"
+            :success-url="successURL"
+            :cancel-url="cancelURL"
+            @loading="(v) => (loading = v)"
+          />
+          <button @click="checkout">Checkout</button>
+        </div>
       </div>
 
       <!-- sneaker records start -->
@@ -31,9 +46,10 @@
 <script>
 import CartItemCard from "@/components/CartItemCard.vue";
 import axios from "axios";
+import { StripeCheckout } from '@vue-stripe/vue-stripe';
 
 export default {
-  name: "SM-Sneakers",
+  name: "SM-Cart",
   created: async function () {
     if (
       !this.$store.getters.getAccessToken ||
@@ -51,7 +67,7 @@ export default {
     do {
       await axios
         .get(
-          `${process.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem(
+          `${this.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem(
             "user_id"
           )}`,
           {
@@ -76,7 +92,7 @@ export default {
           setTimeout(async function () {
             let response = await axios.get(
               `${
-                process.env.VUE_APP_BASE_API_URL
+                this.env.VUE_APP_BASE_API_URL
               }api/cart/${localStorage.getItem("user_id")}`
             );
             cartItemsData = response.data.cartItems;
@@ -100,12 +116,23 @@ export default {
 
     this.cartItems = cartItemsData;
   },
+  mounted() {
+    let recaptchaScript = document.createElement("script");
+    recaptchaScript.setAttribute("src", "https://js.stripe.com/v3");
+    document.head.appendChild(recaptchaScript);
+  },
   components: {
-    CartItemCard,
+    CartItemCard, StripeCheckout
   },
   data: function () {
+    this.publishableKey = this.$store.getters.variables.VUE_APP_STRIPE_PUBLISHABLE_KEY;
     return {
+      env: this.$store.getters.variables,
       cartItems: [],
+      loading: false,
+      lineItems: [],
+      successURL: this.$store.getters.variables.VUE_APP_STRIPE_SUCCESS_URL,
+      cancelURL: this.$store.getters.variables.VUE_APP_STRIPE_CANCEL_URL,
     };
   },
   methods: {
@@ -114,12 +141,12 @@ export default {
         // call edit cart api
         await axios
           .put(
-            `${process.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem(
+            `${this.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem(
               "user_id"
             )}/update`,
             {
               sneaker_id: cartData.sneakerId,
-              new_quantity: cartData.newQuantity
+              new_quantity: cartData.newQuantity,
             },
             {
               headers: {
@@ -141,6 +168,72 @@ export default {
             }
           });
       }
+    },
+    checkout: async function () {
+      // step 1. create the line items
+      // each line item is one item that the user has to pay off
+      // imagine it as each line in an invoice, recepit
+      //
+      // create one line item for each item in the shopping cart
+
+      // 1a - get all the items from current logged in user's shopping cart
+      const response = await axios.get(
+        `${this.env.VUE_APP_BASE_API_URL}api/cart/${localStorage.getItem(
+          "user_id"
+        )}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+
+      const items = response.data.cartItems;
+
+      // 1b - for each item in the items array, create a line item
+      // const meta = [];
+      for (let i of items) {
+        let priceId = "";
+        if(i.sneaker.name === "Nike Airforce 1"){
+            priceId = "price_1KjeJ1BXapCBJm2WYczrQqKi";
+          } else if(i.sneaker.name === "Jordan 1 Starfish"){
+            priceId = "price_1KjeJxBXapCBJm2WO4436IHs";
+          } else if(i.sneaker.name === "Yeezy Boost 350 V2"){
+            priceId = "price_1KjeKMBXapCBJm2WWmaS8Vdz";
+          } else if(i.sneaker.name === "LeBron x  John Elliott"){
+            priceId = "price_1KjeKaBXapCBJm2Wp5ySZpRM";
+          }
+
+        const lineItem = {
+          // name: i.sneaker.name,
+          // amount: i.sneaker.price * 100,
+          quantity: i.quantity,
+          // currency: "SGD",
+          price: priceId
+        };
+
+        // check if the sneaker has image
+        //if the sneaker has image, add it to the lineitem as well
+        // if (i.sneaker.image_url) {
+        //   lineItem["images"] = i.sneaker.image_url;
+        //   // Stripe expect the images of a line item to be an array
+        //   // so we only have one image per sneaker, so that's why we enclosed it around [ ]
+        //   // so that it can be inside an array
+        // }
+
+        this.lineItems.push(lineItem);
+
+        // add to the meta data to remember for each sneaker, what is the quantity purchased
+        // meta.push({
+        //   sneaker_id: i.sneaker.id,
+        //   quantity: i.quantity,
+        // });
+      }
+
+      console.log("ITEMS: " + JSON.stringify(this.lineItems));
+      console.log("SUCCESS LINK: " + this.env.VUE_APP_STRIPE_SUCCESS_URL);
+      // step 3: get the session id from stripes
+      this.$refs.checkoutRef.redirectToCheckout();
     },
   },
 };
