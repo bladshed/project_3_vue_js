@@ -116,7 +116,7 @@ export default {
 
     this.cartItems = cartItemsData;
   },
-  mounted() {
+  mounted: function () {
     let recaptchaScript = document.createElement("script");
     recaptchaScript.setAttribute("src", "https://js.stripe.com/v3");
     document.head.appendChild(recaptchaScript);
